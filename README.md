@@ -1,27 +1,63 @@
 # Lambda Force-Redeploy for ECS Services
 
-This repository contains an AWS Lambda function that **triggers a force-redeployment of ECS services** by updating the service with the current task definition. This is useful when you want to restart services without making any actual changes to the task definition.
+This Lambda function triggers a **force-redeployment** of ECS services by re-registering the existing task definition. Useful for refreshing running services without changing their definitions.
 
-## 🚀 Features
+---
 
-- Force-redeploy ECS services programmatically via Lambda.
-- Controlled through environment variables for flexibility.
-- Supports multiple ECS services in one execution.
-- Has permission to update ECS services and tags.
+## 📦 Project Structure
 
-## 🛠️ Environment Variables
+```
+.
+├── lambda_function.py   # Main handler logic
+├── README.md            # Documentation
+└── ...                  # Infra or deployment files (if any)
+```
 
-The Lambda function relies on two required environment variables:
+---
 
-| Variable        | Description                                                                 |
+## ⚙️ Environment Variables
+
+| Variable       | Description                                                                 |
 |----------------|-----------------------------------------------------------------------------|
-| `ECS_CLUSTER`   | The name of the ECS cluster containing the services to redeploy.           |
-| `ECS_SERVICES`  | Comma-separated list of ECS service ARNs to be force-redeployed.           |
+| `ECS_CLUSTER`  | Name of the ECS cluster                                                     |
+| `ECS_SERVICES` | Comma-separated ECS service ARNs to be force-redeployed                     |
 
-### Example Values
+### Example
 
 ```env
-ECS_CLUSTER=abc-cluster
-ECS_SERVICES= arn_service1, arn_service2
+ECS_CLUSTER=grafana-mimir-main-ap-southeast-1-production
 
+ECS_SERVICES=arn:aws:ecs:ap-southeast-1:1234567:service/grafana-mimir-main-ap-southeast-1-production/grafana-mimir-2-main-ap-southeast-1-production,arn:aws:ecs:ap-southeast-1:1234567:service/grafana-mimir-main-ap-southeast-1-production/grafana-mimir-3-main-ap-southeast-1-production
+```
 
+---
+
+## 🔐 Required IAM Permissions
+
+The Lambda function should be assigned an IAM role with the following permissions:
+
+```json
+{
+  "Effect": "Allow",
+  "Action": [
+    "ecs:UpdateService",
+    "ecs:DescribeServices",
+    "ecs:TagResource"
+  ],
+  "Resource": "*"
+}
+```
+
+> 🎯 Tip: For production, it's better to scope the `Resource` to specific ECS cluster and service ARNs.
+
+---
+
+## 🚀 Usage
+
+You can trigger the function manually, on a schedule using Amazon EventBridge, or programmatically from other AWS services or automation tools.
+
+---
+
+## 👤 Author
+
+Maintained by **Faraz Bin Younus**
