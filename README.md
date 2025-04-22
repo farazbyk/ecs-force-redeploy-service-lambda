@@ -25,9 +25,9 @@ This Lambda function triggers a **force-redeployment** of ECS services by re-reg
 ### Example
 
 ```env
-ECS_CLUSTER=grafana-mimir-main-ap-southeast-1-production
+ECS_CLUSTER=production_cluster
+ECS_SERVICES=arn_service1, arn_service2
 
-ECS_SERVICES=arn:aws:ecs:ap-southeast-1:1234567:service/grafana-mimir-main-ap-southeast-1-production/grafana-mimir-2-main-ap-southeast-1-production,arn:aws:ecs:ap-southeast-1:1234567:service/grafana-mimir-main-ap-southeast-1-production/grafana-mimir-3-main-ap-southeast-1-production
 ```
 
 ---
